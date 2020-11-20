@@ -20,70 +20,75 @@ implpw=''
 #for radio buttons
 conn=sqlite3.connect('test.db')
 
-def menu():
+def menu(widget):
+    widget.destroy()
     global LOGIN_NAME
     menu=Tk()
     menu.geometry("600x600")
     menu.title("MENU")
     Label(menu,text=("WELCOME TO MENU",LOGIN_NAME), bg='blue', width='100',height='4',font=("Calibri",16)).pack()
     Label(menu,text="").pack()
-    Button(menu,text='EDIT_DATABASE',height='2',width='50',command=edit_database).pack()
+    Button(menu,text='EDIT_DATABASE',height='2',width='50',command=lambda:edit_database(menu)).pack()
     Label(menu,text='').pack()
-    Button(menu,text='VIEW_DATABASE',height='2',width='50',command=view_databas).pack()
+    Button(menu,text='VIEW_DATABASE',height='2',width='50',command=lambda:view_databas(menu)).pack()
     Label(menu,text='').pack()
-    Button(menu,text='CREATE_TIMETABLE',height='2',width='50',command=sure).pack()
+    Button(menu,text='CREATE_TIMETABLE',height='2',width='50',command=lambda:sure(menu)).pack()
     Label(menu,text='').pack()
     Button(menu,text='VIEW_TIMETABLE',height='2',width='50',command=view_timetable).pack()
     Label(menu,text='').pack()
     Button(menu,text='SUBSTITUTIONS',height='2',width='50').pack()
     Label(menu,text='').pack()
-    Button(menu,text='LOGOUT',height='2',width='50',command=login_page).pack()
+    Button(menu,text='LOGOUT',height='2',width='50',command=lambda:login_page(menu)).pack()
 
-def edit_database():
-
+def edit_database(widget):
+    widget.destroy()
     Edit_database =Tk()
-    Edit_database.geometry("600x800")
+    Edit_database.geometry("600x600")
     Edit_database.title("EDIT_DATABASE")
-    Label(Edit_database,text="FILL THE ENTRIES", bg='blue', width='100',height='3',font=("Calibri",16)).pack()
+    Label(Edit_database,text="FILL THE ENTRIES", bg='blue', width='100',height='2',font=("Calibri",16)).pack()
     Label(Edit_database,text="").pack()
-    Button(Edit_database,text='ADD/REMOVE TEACHERS',height='2',width='50',command=Add_Teachers).pack()
-    Button(Edit_database,text='UPDATE/DELETE TEACHERS',height='2',width='50',command=Up_del_teachers).pack()
+    Button(Edit_database,text='ADD/REMOVE TEACHERS',height='1',width='50',command=lambda:Add_Teachers(Edit_database)).pack()
+    Button(Edit_database,text='UPDATE/DELETE TEACHERS',height='1',width='50',command=lambda:Up_del_teachers(Edit_database)).pack()
     Label(Edit_database,text='').pack()
-    Button(Edit_database,text='ADD/REMOVE CLASSES',height='2',width='50',command=Add_Classes).pack()
-    Button(Edit_database,text='UPDATE/DELETE CLASSES',height='2',width='50',command=Up_del_classes).pack()
+    Button(Edit_database,text='ADD/REMOVE CLASSES',height='1',width='50',command=lambda:Add_Classes(Edit_database)).pack()
+    Button(Edit_database,text='UPDATE/DELETE CLASSES',height='1',width='50',command=lambda:Up_del_classes(Edit_database)).pack()
     Label(Edit_database,text='').pack()
-    Button(Edit_database,text='ADD/REMOVE SUBJECTS',height='2',width='50',command=Add_Subjects).pack()
-    Button(Edit_database,text='UPDATE/DELETE SUBJECTS',height='2',width='50',command=Up_del_subjects).pack()
+    Button(Edit_database,text='ADD/REMOVE SUBJECTS',height='1',width='50',command=lambda:Add_Subjects(Edit_database)).pack()
+    Button(Edit_database,text='UPDATE/DELETE SUBJECTS',height='1',width='50',command=lambda:Up_del_subjects(Edit_database)).pack()
     Label(Edit_database,text='').pack()
-    Button(Edit_database,text='ALLOT SUBJECTS TO TEACHERS',height='2',width='50',command=Allot_Subjects).pack()
-    Button(Edit_database,text='CHANGE ALLOTMENT',height='2',width='50',command=Up_del_allots).pack()
+    Button(Edit_database,text='ALLOT SUBJECTS TO TEACHERS',height='1',width='50',command=lambda:Allot_Subjects(Edit_database)).pack()
+    Button(Edit_database,text='CHANGE ALLOTMENT',height='1',width='50',command=lambda:Up_del_allots(Edit_database)).pack()
     Label(Edit_database,text='').pack()
-    Button(Edit_database,text='ADD/REMOVE DAYS',height='2',width='50',command=add_days).pack()
-    Button(Edit_database,text='UPDATE/DELETE DAYS',height='2',width='50',command=Up_del_days).pack()
+    Button(Edit_database,text='ADD/REMOVE DAYS',height='1',width='50',command=lambda:add_days(Edit_database)).pack()
+    Button(Edit_database,text='UPDATE/DELETE DAYS',height='1',width='50',command=lambda:Up_del_days(Edit_database)).pack()
     Label(Edit_database,text='').pack()
-    Button(Edit_database,text='ADD/REMOVE PERIODS',height='2',width='50',command=add_periods).pack()
-    Button(Edit_database,text='UPDATE/DELETE PERIODS',height='2',width='50',command=Up_del_periods).pack()
+    Button(Edit_database,text='ADD/REMOVE PERIODS',height='1',width='50',command=lambda:add_periods(Edit_database)).pack()
+    Button(Edit_database,text='UPDATE/DELETE PERIODS',height='1',width='50',command=lambda:Up_del_periods(Edit_database)).pack()
     Label(Edit_database,text='').pack()
-    Button(Edit_database,text='BACK TO MENU',height='2',width='50',command=back_to_menu).pack()
+    Button(Edit_database,text='BACK TO MENU',height='1',width='50',command=lambda:back_to_menu(Edit_database)).pack()
     Label(Edit_database,text='').pack()
 
-def view_databas():
+def view_databas(widget):
+    widget.destroy()
     view_database=Tk()
     view_database.geometry("800x800")
     view_database.title("VIEW_DATABASE")
-    Label(view_database,text="VIEW ENTRIES", bg='blue', width='100',height='4',font=("Calibri",16)).pack()
+    Label(view_database,text="VIEW ENTRIES", bg='blue', width='80',height='4',font=("Calibri",16)).pack()
     Label(view_database,text="").pack()
     Label(view_database,text="VIEW TEACHERS", bg='blue',width='50').pack()
     
-    def SingleTeacher():
+    def SingleTeacher(widget):
+        widget.destroy()
         root=Tk()
         root.geometry("450x450")
         Label(root,text="Enter TEACHER_ID").place(x=10,y=30)
         Teacher_id=IntVar()
         entry_1=Entry(root,textvariable=Teacher_id)
         entry_1.place(x=150,y=30)
+        Button(root,text='BACK',height='1',width='5',command=lambda:view_databas(root)).place(x=10,y=80)
 
-        def readonerecord():
+        def readonerecord(widget):
+            widget.destroy()
             Teacher_id=entry_1.get()
             id=Teacher_id
             try:
@@ -110,9 +115,9 @@ def view_databas():
                 Label(root,text=CONTACT_PHONE).place(x=150,y=280)
                 Label(root,text="CONTACT_EMAIL:").place(x=10,y=330)
                 Label(root,text=CONTACT_EMAIL).place(x=150,y=330)
-                def previouspage():
-                    view_databas()
-                Btn2=Button(root,text="BACK TO PREVIOUS PAGE",command=previouspage)
+                def previouspage(widget):
+                    view_databas(widget)
+                Btn2=Button(root,text="BACK TO PREVIOUS PAGE",command=lambda:previouspage(root))
                 Btn2.place(x=140,y=380)
                 cursor.close()
 
@@ -126,7 +131,7 @@ def view_databas():
         Btn1.place(x=140,y=80)
 
         
-    Button(view_database,text='SINGLE TEACHER',height='2',width='50',command=SingleTeacher).pack()
+    Button(view_database,text='SINGLE TEACHER',height='2',width='50',command=lambda:SingleTeacher(view_database)).pack()
 
     L=['TEACHER_ID','TEACHER_NAME','WEEKHOURS','CONTACT_PHONE','CONTACT_EMAIL']
     
@@ -171,13 +176,15 @@ def view_databas():
     Button(view_database,text='ALL TEACHERS',height='2',width='50',command=viewteachers).pack()
     Label(view_database,text='').pack()
     Label(view_database,text='VIEW CLASSES',bg='blue',width='50').pack()
-    def SingleClass():
+    def SingleClass(widget):
+        widget.destroy()
         root1=Tk()
         root1.geometry("450x450")
         Label(root1,text="Enter CLASS_ID").place(x=10,y=30)
         Class_id=IntVar()
         entry_1=Entry(root1,textvariable=Class_id)
         entry_1.place(x=150,y=30)
+        Button(root1,text='BACK',height='1',width='5',command=lambda:view_databas(root1)).place(x=10,y=80)
 
         def readoneclass():
             Class_id=entry_1.get()
@@ -197,9 +204,9 @@ def view_databas():
                 Label(root1,text=CLASS_ID).place(x=150,y=130)
                 Label(root1,text="CLASS_NAME:").place(x=10,y=180)
                 Label(root1,text=CLASS_NAME).place(x=150,y=180)
-                def previouspage():
-                    view_databas()
-                Btn2=Button(root1,text="BACK TO PREVIOUS PAGE",command=previouspage)
+                def previouspage(widget):
+                    view_databas(widget)
+                Btn2=Button(root1,text="BACK TO PREVIOUS PAGE",command=lambda:previouspage(root1))
                 Btn2.place(x=140,y=230)
                 cursor.close()
 
@@ -212,7 +219,7 @@ def view_databas():
         Btn1=Button(root1,text='View',command=readoneclass)
         Btn1.place(x=140,y=80)
 
-    Button(view_database,text='SINGLE CLASS',height='2',width='50',command=SingleClass).pack()
+    Button(view_database,text='SINGLE CLASS',height='2',width='50',command=lambda:SingleClass(view_database)).pack()
 
     L1=['CLASS_ID','CLASS_NAME']
     
@@ -330,15 +337,18 @@ def view_databas():
     Label(view_database,text='').pack()
     Label(view_database,text='VIEW SUBJECTS',bg='blue',width='50').pack()
 
-    def SingleSub():
+    def SingleSub(widget):
+        widget.destroy()
         root2=Tk()
         root2.geometry("450x450")
         Label(root2,text="Enter SUBJECT_CODE").place(x=10,y=30)
         Subject_code=IntVar()
         entry_1=Entry(root2,textvariable=Subject_code)
         entry_1.place(x=150,y=30)
+        Button(root2,text='BACK',height='1',width='5',command=lambda:view_databas(root2)).place(x=10,y=80)
 
-        def readonesubject():
+        def readonesubject(widget):
+            widget.destroy()
             Subject_code=entry_1.get()
             id=Subject_code
             try:
@@ -356,9 +366,9 @@ def view_databas():
                 Label(root2,text=SUBJECT_CODE).place(x=150,y=130)
                 Label(root2,text="SUBJECT_NAME:").place(x=10,y=180)
                 Label(root2,text=SUBJECT_NAME).place(x=150,y=180)
-                def previouspage():
-                    view_databas()
-                Btn2=Button(root2,text="BACK TO PREVIOUS PAGE",command=previouspage)
+                def previouspage(widget):
+                    view_databas(widget)
+                Btn2=Button(root2,text="BACK TO PREVIOUS PAGE",command=lambda:previouspage(root2))
                 Btn2.place(x=140,y=230)
                 cursor.close()
 
@@ -368,9 +378,9 @@ def view_databas():
                 if (conn):
                     conn.close()
                     print("The SQLite connection is closed")
-        Btn1=Button(root2,text='View',command=readonesubject)
+        Btn1=Button(root2,text='View',command=lambda:readonesubject(root2))
         Btn1.place(x=140,y=80)
-    Button(view_database,text='SINGLE SUBJECT',height='2',width='50',command=SingleSub).pack()
+    Button(view_database,text='SINGLE SUBJECT',height='2',width='50',command=lambda:SingleSub(view_database)).pack()
 
     L2=['SUBJECT_CODE','SUBJECT_NAME']
     
@@ -452,11 +462,12 @@ def view_databas():
                 print("The SQLite connection is closed")
     Button(view_database,text='VIEW SUBJECT_TEACHERS',height='2',width='50',command=joinedtable).pack()
     Label(view_database,text='').pack()
-    Button(view_database,text='BACK TO MENU',height='2',width='50',command=back_to_menu).pack()
+    Button(view_database,text='BACK TO MENU',height='2',width='50',command=lambda:back_to_menu(view_database)).pack()
     Label(view_database,text='').pack()
 
 
-def Add_Teachers():
+def Add_Teachers(widget):
+    widget.destroy()
     addteachers=Tk()
     addteachers.geometry("500x500")
     addteachers.title("Add/Remove Teachers")
@@ -552,12 +563,13 @@ def Add_Teachers():
         
     button=Button(addteachers, text='ADD',width=20,bg='brown',fg='white',command=teacherdetails).place(x=100,y=380)
     button=Button(addteachers, text='REMOVE',width=20,bg='brown',fg='white',command=deleteteacher).place(x=250,y=380)
-    button=Button(addteachers, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=edit_database).place(x=100,y=430)
+    button=Button(addteachers, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(addteachers)).place(x=100,y=430)
     
     
 
 
-def Add_Classes():
+def Add_Classes(widget):
+    widget.destroy()
     addclasses=Tk()
     addclasses.geometry("500x500")
     addclasses.title("Add/Remove Classes")
@@ -628,9 +640,10 @@ def Add_Classes():
     
     button=Button(addclasses, text='ADD',width=20,bg='brown',fg='white',command=classdetails).place(x=100,y=230)
     button=Button(addclasses, text='REMOVE',width=20,bg='brown',fg='white',command=deleteclass).place(x=250,y=230)
-    button=Button(addclasses, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=edit_database).place(x=100,y=280)
+    button=Button(addclasses, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(addclasses)).place(x=100,y=280)
 
-def Add_Subjects():
+def Add_Subjects(widget):
+    widget.destroy()
     addsubjects=Tk()
     addsubjects.geometry("500x500")
     addsubjects.title("Add/Remove Subjects")
@@ -700,9 +713,10 @@ def Add_Subjects():
     
     button=Button(addsubjects, text='ADD',width=20,bg='brown',fg='white',command=subjectdetails).place(x=100,y=230)
     button=Button(addsubjects, text='REMOVE',width=20,bg='brown',fg='white',command=deletesubject).place(x=250,y=230)
-    button=Button(addsubjects, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=edit_database).place(x=100,y=280)
+    button=Button(addsubjects, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(addsubjects)).place(x=100,y=280)
     
-def Allot_Subjects():
+def Allot_Subjects(widget):
+    widget.destroy()
     allotsubjects=Tk()
     allotsubjects.geometry("500x500")
     allotsubjects.title("ALLOT SUBJECTS TO TEACHERS")
@@ -775,9 +789,10 @@ def Allot_Subjects():
     
     button=Button(allotsubjects, text='ADD',width=20,bg='brown',fg='white',command=ALLOTSUBJECTS).place(x=100,y=230)
     button=Button(allotsubjects, text='REMOVE',width=20,bg='brown',fg='white',command=deletesubject).place(x=250,y=230)
-    button=Button(allotsubjects, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=edit_database).place(x=100,y=280)
+    button=Button(allotsubjects, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(allotsubjects)).place(x=100,y=280)
 
-def add_periods():
+def add_periods(widget):
+    widget.destroy()
     inputpag=Tk()
     inputpag.geometry("500x500")
     inputpag.title("ADD/REMOVE PERIODS")
@@ -843,9 +858,10 @@ def add_periods():
     
     button=Button(inputpag, text='ADD',width=20,bg='brown',fg='white',command=insertion).place(x=100,y=230)
     button=Button(inputpag, text='REMOVE',width=20,bg='brown',fg='white',command=deletesubject).place(x=250,y=230)
-    button=Button(inputpag, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=edit_database).place(x=100,y=280)
+    button=Button(inputpag, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(inputpag)).place(x=100,y=280)
 
-def add_days():
+def add_days(widget):
+    widget.destroy()
     daypag=Tk()
     daypag.geometry("500x500")
     daypag.title("ADD/REMOVE DAYS")
@@ -911,9 +927,10 @@ def add_days():
     
     button=Button(daypag, text='ADD',width=20,bg='brown',fg='white',command=insertion).place(x=100,y=230)
     button=Button(daypag, text='REMOVE',width=20,bg='brown',fg='white',command=deleteday).place(x=250,y=230)
-    button=Button(daypag, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=edit_database).place(x=100,y=280)
+    button=Button(daypag, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(daypag)).place(x=100,y=280)
 
-def timetablemodel():
+def timetablemodel(widget):
+    widget.destroy()
     root=Tk()
     root['bg']='black'
     entry=[]
@@ -987,7 +1004,8 @@ def timetablemodel():
         sc.place(x=100,y=180)
         
         
-        def click_Button():
+        def click_Button(widget):
+            widget.destroy()
             m=[]
             x=row
             y=column
@@ -1018,7 +1036,7 @@ def timetablemodel():
             Btn2.grid(row=x,column=y,ipadx=10,ipady=10,padx=2,pady=2)
             
             
-        Btn1=ttk.Button(new_window,text='Fill Entry',command=click_Button)
+        Btn1=ttk.Button(new_window,text='Fill Entry',command=lambda:click_Button(new_window))
         style.configure('Btn1',background='brown',foreground='black')
         Btn1.place(x=130,y=230)
     for x in range(1,10):
@@ -1061,7 +1079,8 @@ def timetablemodel():
     style.configure("normal.TLabel",width=30,height=30)
     root.mainloop()
 
-def sure():
+def sure(widget):
+    widget.destroy()
     new=Tk()
     new.geometry("300x200")
     ttk.Label(new,text='ENTER CLASS_ID:').place(x=10,y=30)
@@ -1076,11 +1095,15 @@ def sure():
             
     Btn1=ttk.Button(new,text="CREATE TIMETABLE:",command=com)
     Btn1.place(x=100,y=80)
+    Btn1=ttk.Button(new,text="BACK TO MENU",command=lambda:back_to_menu(new))
+    Btn1.place(x=100,y=100)
 
-def view_timetable():
+def view_timetable(widget):
+    widget.destroy()
     viewtimetable=Tk()
     viewtimetable.geometry("400x400")
-    def checkperiod():
+    def checkperiod(widget):
+        widget.destroy()
         chckper=Tk()
         chckper.geometry('500x500')
         Label(chckper,text='Enter CLASS_ID').pack()
@@ -1095,6 +1118,7 @@ def view_timetable():
         pernum=IntVar()
         pnu=Entry(chckper,textvariable=pernum)
         pnu.pack()
+        Button(chckper,text='BACK',command=lambda:view_timetable(chckper)).pack()
         
         def showdetails():
             Class_id=cid.get()
@@ -1156,14 +1180,17 @@ def view_timetable():
         Label(chckper,text='').pack()
        
 
-    Btn1=Button(viewtimetable,text="Check for a single period",height='2',width='40',command=checkperiod)
+    Btn1=Button(viewtimetable,text="Check for a single period",height='2',width='40',command=lambda:checkperiod(viewtimetable))
     Btn1.place(x=50,y=30)
-    def checkteacher():
+    def checkteacher(widget):
+        widget.destroy()
         chckter=Tk()
         chckter.geometry('500x500')
         Label(chckter,text='Enter TEACHER_ID').place(x=10,y=50)
         teacher_id=IntVar()
         tid=Entry(chckter,textvariable=teacher_id)
+        Butn2=Button(chckter,text='BACK',command=lambda:view_timetable(chckter))
+        Butn2.place(x=10,y=70)
 
         
         tid.place(x=150,y=50)
@@ -1232,10 +1259,11 @@ def view_timetable():
         Button(chckter,text='SHOW DETAILS',command=showtdetails).place(x=130,y=80)
 
         
-    Btn2=Button(viewtimetable,text="Check by teacher",height='2',width='40',command=checkteacher)
+    Btn2=Button(viewtimetable,text="Check by teacher",height='2',width='40',command=lambda:checkteacher(viewtimetable))
     Btn2.place(x=50,y=80)
 
-    def checkday():
+    def checkday(widget):
+        widget.destroy()
         chckper=Tk()
         chckper.geometry('500x500')
         Label(chckper,text='Enter CLASS_ID').pack()
@@ -1246,6 +1274,7 @@ def view_timetable():
         daynum=IntVar()
         dnu=Entry(chckper,textvariable=daynum)
         dnu.pack()
+        Button(chckper,text='Back',command=lambda:view_timetable(chckper)).pack()
         
         def showdetails():
             Class_id=cid.get()
@@ -1305,10 +1334,11 @@ def view_timetable():
         Button(chckper,text='SHOW DETAILS',command=showdetails).pack()
         Label(chckper,text='').pack()
 
-    Btn2=Button(viewtimetable,text="Check by day",height='2',width='40',command=checkday)
+    Btn2=Button(viewtimetable,text="Check by day",height='2',width='40',command=lambda:checkday(viewtimetable))
     Btn2.place(x=50,y=130)
 
-    def updateperiod():
+    def updateperiod(widget):
+        widget.destroy()
         chckper=Tk()
         chckper.geometry('500x500')
         Label(chckper,text='Enter CLASS_ID for class to be updated').pack()
@@ -1331,6 +1361,7 @@ def view_timetable():
         subject_code=IntVar()
         sid=Entry(chckper,textvariable=subject_code)
         sid.pack()
+        Button(chckper,text='BACK',command=lambda:view_timetable(chckper)).pack()
         
         def showdetails():
             Class_id=cid.get()
@@ -1362,18 +1393,18 @@ def view_timetable():
         Button(chckper,text='UPDATE RECORD',command=showdetails).pack()
         Label(chckper,text='').pack()
 
-    Btn2=Button(viewtimetable,text="Update a period",height='2',width='40',command=updateperiod)
+    Btn2=Button(viewtimetable,text="Update a period",height='2',width='40',command=lambda:updateperiod(viewtimetable))
     Btn2.place(x=50,y=180)
 
-    def viewwholedatabase():
+    def viewwholedatabase(widget):
+        widget.destroy()
         chckter=Tk()
         chckter.geometry('300x200')
         Label(chckter,text='Enter CLASS_ID').place(x=10,y=50)
         teacher_id=IntVar()
         tid=Entry(chckter,textvariable=teacher_id)
-
-        
         tid.place(x=150,y=50)
+        Button(chckter,text='BACK',command=lambda:view_timetable(chckter)).place(x=10,y=150)
         LTW=['CLASS_NAME','DAY_NUMBER','DAY_NAME','PERIOD_NUMBER','PERIOD_NAME','TEACHER_ID','TEACHER_NAME','SUBJECT_CODE','SUBJECT_NAME']
        
         def showtdetails():
@@ -1449,16 +1480,20 @@ def view_timetable():
         
 
         
-    Btn2=Button(viewtimetable,text="View Class Timetable Database",height='2',width='40',command=viewwholedatabase)
+    Btn2=Button(viewtimetable,text="View Class Timetable Database",height='2',width='40',command=lambda:viewwholedatabase(viewtimetable))
     Btn2.place(x=50,y=230)
+    
+    
 
-    def deletetimetable():
+    def deletetimetable(widget):
+        widget.destroy()
         chckter=Tk()
         chckter.geometry('400x200')
         Label(chckter,text='Enter CLASS_ID of Class to be deleted').pack()
         teacher_id=IntVar()
         tid=Entry(chckter,textvariable=teacher_id)
         tid.pack()
+        Button(chckter,text='BACK',command=lambda:view_timetable(chckter)).pack()
 
         def deleteSqliteRecord():
             teacher_id=tid.get()
@@ -1482,12 +1517,17 @@ def view_timetable():
                     print("sqlite connection is closed")
         
         Button(chckter,text='DELETE',command=deleteSqliteRecord).pack()
-    Btn2=Button(viewtimetable,text="DELETE CLASS TIMETABLE",height='2',width='40',command=deletetimetable)
+    Btn2=Button(viewtimetable,text="DELETE CLASS TIMETABLE",height='2',width='40',command=lambda:deletetimetable(viewtimetable))
     Btn2.place(x=50,y=280)
+    
+    Btn2=Button(viewtimetable,text="Back To Menu",height='2',width='40',command=lambda:back_to_menu(viewtimetable))
+    Btn2.place(x=50,y=320)
+    
 
 
 
-def Up_del_teachers():
+def Up_del_teachers(widget):
+    widget.destroy()
     updo=Tk()
     updo.geometry("300x600")
     Label(updo,text='Enter TEACHER_ID to be updated or deleted').pack()
@@ -1563,8 +1603,10 @@ def Up_del_teachers():
                 print("sqlite connection is closed")
     Btn1=Button(updo,text="DELETE",command=deleteteacher).pack()
     Label(updo,text='').pack()
+    Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
-def Up_del_classes():
+def Up_del_classes(widget):
+    widget.destroy()
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter CLASS_ID to be updated or deleted').pack()
@@ -1625,8 +1667,11 @@ def Up_del_classes():
                 print("sqlite connection is closed")
     Btn1=Button(updo,text="DELETE",command=deleteclass).pack()
     Label(updo,text='').pack()
+    Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
-def Up_del_subjects():
+
+def Up_del_subjects(widget):
+    widget.destroy()
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter SUBJECT_CODE to be updated or deleted').pack()
@@ -1687,8 +1732,11 @@ def Up_del_subjects():
                 print("sqlite connection is closed")
     Btn1=Button(updo,text="DELETE",command=deletesubject).pack()
     Label(updo,text='').pack()
+    Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
-def Up_del_allots():
+
+def Up_del_allots(widget):
+    widget.destroy()
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter TEACHER_ID to be updated or deleted').pack()
@@ -1759,8 +1807,11 @@ def Up_del_allots():
         Btn2=Button(updo,text='Delete record',command=updateSqliteTable).pack()
     Btn1=Button(updo,text="DELETE",command=deletion).pack()
     Label(updo,text='').pack()
+    Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
+
     
-def Up_del_days():
+def Up_del_days(widget):
+    widget.destroy()
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter DAY_NUMBER to be updated or deleted').pack()
@@ -1823,8 +1874,11 @@ def Up_del_days():
     Btnd=Button(updo,text="DELETE",command=deletesubject)
     Btnd.pack()
     Label(updo,text='').pack()
+    Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
-def Up_del_periods():
+
+def Up_del_periods(widget):
+    widget.destroy()
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter PERIOD_NUMBER to be updated or deleted').pack()
@@ -1887,11 +1941,28 @@ def Up_del_periods():
     Btnd=Button(updo,text="DELETE",command=deletePERIOD)
     Btnd.pack()
     Label(updo,text='').pack()
-    
-def back_to_menu():
-    menu()
+    Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
-def registration_page():
+    
+def back_to_menu(widget):
+    menu(widget)
+
+def rootlogin(widget):
+    widget.destroy()
+    rootlogi=Tk()
+    Label(rootlogi,text="Join our Community", bg='blue', width='100',height='4',font=("Calibri",16)).pack()
+    Label(rootlogi,text="").pack()
+    Button(rootlogi,text='Login',height='2',width='30',command=lambda:login_page(rootlogi)).pack()
+    Label(rootlogi,text='').pack()
+    Button(rootlogi,text='Register',height='2',width='30',command=lambda:registration_page(rootlogi)).pack()
+    Label(rootlogi,text='').pack()
+    Button(rootlogi,text='VIEW_TIMETABLE',height='2',width='30',command=lambda:view_timetable(rootlogi)).pack()
+    Label(rootlogi,text='').pack()
+
+
+
+def registration_page(widget):
+    widget.destroy()
     registrationpage=Tk()
     registrationpage.geometry("800x800")
     registrationpage.title("Registration Page")
@@ -1958,8 +2029,12 @@ def registration_page():
         insertion(un,em,g,ins,pw)
             
     button=Button(registrationpage, text='Submit',width=20,bg='brown',fg='white',command=retreive_input).place(x=180,y=380)
+    buttong=Button(registrationpage, text='Login',width=20,bg='brown',fg='white',command=lambda:login_page(registrationpage))
+    buttong.place(x=180,y=430)
     
-def login_page():
+
+def login_page(widget):
+    widget.destroy()
     loginpage=Tk()
     loginpage.geometry("500x500")
     loginpage.title("Login Page")
@@ -1993,7 +2068,7 @@ def login_page():
                 print('Welcome',name)
                 global LOGIN_NAME
                 LOGIN_NAME=name
-                menu()
+                menu(loginpage)
             elif pwd != lpw:
                 print("Register yourself first")
             
@@ -2012,14 +2087,8 @@ def login_page():
         print(lpw)
         validation(lem,lpw)
     Button(loginpage, text='Login',width=20,bg='brown',fg='white',command=check).place(x=180,y=380)
+    Button(loginpage, text='Back',width=20,bg='brown',fg='white',command=lambda:rootlogin(loginpage)).place(x=180,y=430)
 
-def rootlogin():
-    rootlogi=Tk()
-    Label(rootlogi,text="Join our Community", bg='blue', width='100',height='4',font=("Calibri",16)).pack()
-    Label(rootlogi,text="").pack()
-    Button(rootlogi,text='Login',height='2',width='30',command=login_page).pack()
-    Label(rootlogi,text='').pack()
-    Button(rootlogi,text='Register',height='2',width='30',command=registration_page).pack()
 
 homepage=Tk()
 Label1=Label(homepage,text="WELCOME",bg="BLACK",fg="ORANGE",font=("IMPRINT MT SHADOW",70),height=0,width=50)
@@ -2032,12 +2101,13 @@ Label4=Label(homepage,text="MANAGEMENT",bg="BLACK",fg="ORANGE",font=("IMPRINT MT
 Label4.pack()
 Label5=Label(homepage,text="SYSTEM",bg="BLACK",fg="ORANGE",font=("IMPRINT MT SHADOW",70),height=0,width=50)
 Label5.pack()
-Button1=Button(homepage,text='Press key to start',bg='BLACK',fg='ORANGE',command=rootlogin,font=('IMPRINT MT SHADOW',20))
+Button1=Button(homepage,text='Press key to start',bg='BLACK',fg='ORANGE',command=lambda:rootlogin(homepage),font=('IMPRINT MT SHADOW',20))
 Button1.pack()
 homepage.title('SUBSTITUTION MANAGEMENT SYSTEM')
 homepage.geometry('1350x1200')
 homepage.configure(background='black')
 homepage.mainloop()
+
                  
 
 
