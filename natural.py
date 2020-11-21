@@ -1,4 +1,4 @@
-from tkinter import *
+yfrom tkinter import *
 def For_you():
     You=Tk()
     You.geometry("400x400")
@@ -14,7 +14,7 @@ def For_you():
         if x==3:
             Button(You,text='FUCK',bg='red',fg='black',height=3,width=6,command=lambda row=x,column=y:com1(row,column)).grid(row=x,column=y)
         if x==4:
-            Button(You,text='OFF',bg='red',fg='black',height=3,width=6,command=lambda row=x,column=y:com1(row,column)).grid(row=x,column=y)
+            Button(You,text='SWEETIE',bg='red',fg='black',height=3,width=6,command=lambda row=x,column=y:com1(row,column)).grid(row=x,column=y)
 
                 
         
