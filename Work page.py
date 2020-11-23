@@ -29,19 +29,19 @@ def menu(widget):
     menu.title("MENU")
     Label(menu,text=("WELCOME TO MENU",LOGIN_NAME), bg='blue', width='100',height='4',font=("Calibri",16)).pack()
     Label(menu,text="").pack()
-    Button(menu,text='EDIT_DATABASE',height='2',width='50',command=lambda:edit_database(menu)).pack()
+    Button(menu,text='EDIT_DATABASE',height='2',bg='white',fg='black',width='50',font=("Arial",10,'bold'),command=lambda:edit_database(menu)).pack()
     Label(menu,text='').pack()
-    Button(menu,text='VIEW_DATABASE',height='2',width='50',command=lambda:view_databas(menu)).pack()
+    Button(menu,text='VIEW_DATABASE',height='2',bg='white',fg='black',width='50',font=("Arial",10,'bold'),command=lambda:view_databas(menu)).pack()
     Label(menu,text='').pack()
-    Button(menu,text='CREATE_TIMETABLE',height='2',width='50',command=lambda:sure(menu)).pack()
+    Button(menu,text='CREATE_TIMETABLE',height='2',bg='white',fg='black',width='50',font=("Arial",10,'bold'),command=lambda:sure(menu)).pack()
     Label(menu,text='').pack()
-    Button(menu,text='VIEW_TIMETABLE',height='2',width='50',command=view_timetable).pack()
+    Button(menu,text='VIEW_TIMETABLE',height='2',bg='white',fg='black',width='50',font=("Arial",10,'bold'),command=lambda:view_timetable(menu)).pack()
     Label(menu,text='').pack()
-    Button(menu,text='FILL ATTENDANCE',height='2',width='50',command=lambda:Opening_Page(menu)).pack()
+    Button(menu,text='FILL ATTENDANCE',height='2',bg='white',fg='black',width='50',font=("Arial",10,'bold'),command=lambda:Opening_Page(menu)).pack()
     Label(menu,text='').pack()
-    Button(menu,text='SUBSTITUTIONS',height='2',width='50').pack()
+    Button(menu,text='SUBSTITUTIONS',height='2',bg='white',fg='black',width='50',font=("Arial",10,'bold')).pack()
     Label(menu,text='').pack()
-    Button(menu,text='LOGOUT',height='2',width='50',command=lambda:login_page(menu)).pack()
+    Button(menu,text='LOGOUT',height='2',bg='brown',fg='black',width='50',font=("Arial",10,'bold'),command=lambda:login_page(menu)).pack()
 
 def edit_database(widget):
     widget.destroy()
@@ -999,15 +999,86 @@ def Allot_Subjects(widget):
     Label(allotsubjects,text="").pack()
     label_1 = Label(allotsubjects, text="TEACHER_ID",width=20,font=("bold", 10))
     label_1.place(x=80,y=130)
-    Teacher_id=IntVar()
-    entry_1 = Entry(allotsubjects,textvariable=Teacher_id)
-    entry_1.place(x=240,y=130)
+    asb=[0,0]
+    LTES=[]
+    L_TES=[]
+    def viewTES():
+        try:
+            conn = sqlite3.connect('test.db')
+            cursor = conn.cursor()
+            print("Connected to SQLite")
+            sqlite_select_query = """SELECT * from TEACHERS"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            rows=len(records)
+            print("Printing each row")
+            for row in records:
+                LTES.append(row[0])
+                LTES.append(row[1])
+                L_TES.append(row[1])
+            cursor.close()  
+        except sqlite3.Error as error:
+            print("Failed to read data from sqlite table", error)
+        finally:
+            if (conn):
+                conn.close()
+                print("The SQLite connection is closed")
+    viewTES()
+    print(LTES)
+    def update3(FOO):
+        x=clicked2.get()
+        x=str(x)
+        y=LTES.index(x)
+        print(int(LTES[y-1]),x)
+        Teacher_id=int(LTES[y-1])
+        asb[0]=Teacher_id
+    clicked2=StringVar(allotsubjects)
+    clicked2.set('TEACHERS')
+    drop=OptionMenu(allotsubjects,clicked2,*tuple(L_TES),command=update3)
+    drop.configure(width=10,height=1,background='white',foreground='black')
+    drop.place(x=240,y=130)
     
     label_2 = Label(allotsubjects, text="SUBJECT_CODE",width=20,font=("bold", 10))
     label_2.place(x=80,y=180)
-    Subject_code=IntVar()
-    entry_2 = Entry(allotsubjects,textvariable=Subject_code)
-    entry_2.place(x=240,y=180)
+    Subject_code=0
+    LSub=[]
+    L_Sub=[]
+    def viewSUB():
+        try:
+            conn = sqlite3.connect('test.db')
+            cursor = conn.cursor()
+            print("Connected to SQLite")
+            sqlite_select_query = """SELECT * from SUBJECTS"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            rows=len(records)
+            print("Printing each row")
+            for row in records:
+                LSub.append(row[0])
+                LSub.append(row[1])
+                L_Sub.append(row[1])
+            cursor.close()  
+        except sqlite3.Error as error:
+            print("Failed to read data from sqlite table", error)
+        finally:
+            if (conn):
+                conn.close()
+                print("The SQLite connection is closed")
+    viewSUB()
+    print(LSub)
+    Subject_code=0
+    def update4(FOO):
+        x=clicked3.get()
+        x=str(x)
+        y=LSub.index(x)
+        print(int(LSub[y-1]),x)
+        Subject_code=int(LSub[y-1])
+        asb[1]=Subject_code
+    clicked3=StringVar(allotsubjects)
+    clicked3.set('Subjects')
+    drop=OptionMenu(allotsubjects,clicked3,*tuple(L_Sub),command=update4)
+    drop.configure(width=10,height=1,background='white',foreground='black')
+    drop.place(x=240,y=180)
 
     def insertion(Teacher_id,Subject_code):
         try:
@@ -1027,18 +1098,17 @@ def Allot_Subjects(widget):
                 conn.close()
                 print("The SQLite connection in closed")
            
-        print("command executed successfully")
-    def deletesubject():
-        Teacher_id=entry_1.get()
+    print("command executed successfully")
+    def deletesubject(Teacher_id,Subject_code):
         Tid=Teacher_id
-        Subject_code=entry_2.get()
         Sid=Subject_code
+        print(Tid,Sid)
         try:
             conn = sqlite3.connect('test.db')
             cursor = conn.cursor()
             print("Connected to SQLite")
 
-            sql_update_query = """DELETE from TEACHER_SUBJECT where (TEACHER_ID,SUBJECT_CODE) = (?,?)"""
+            sql_update_query = """DELETE from TEACHER_SUBJECT where TEACHER_ID = ? and SUBJECT_CODE = ?"""
             cursor.execute(sql_update_query, (Tid,Sid))
             conn.commit()
             print("Record deleted successfully")
@@ -1056,14 +1126,10 @@ def Allot_Subjects(widget):
                 conn.close()
                 print("sqlite connection is closed")
 
-    def ALLOTSUBJECTS():
-        Teacher_id=entry_1.get()
-        Subject_code=entry_2.get()
-        insertion(Teacher_id,Subject_code)
     
     
-    button=Button(allotsubjects, text='ADD',width=20,bg='brown',fg='white',command=ALLOTSUBJECTS).place(x=100,y=230)
-    button=Button(allotsubjects, text='REMOVE',width=20,bg='brown',fg='white',command=deletesubject).place(x=250,y=230)
+    button=Button(allotsubjects, text='ADD',width=20,bg='brown',fg='white',command=lambda:insertion(asb[0],asb[1])).place(x=100,y=230)
+    button=Button(allotsubjects, text='REMOVE',width=20,bg='brown',fg='white',command=lambda:deletesubject(asb[0],asb[1])).place(x=250,y=230)
     button=Button(allotsubjects, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(allotsubjects)).place(x=100,y=280)
 
 def add_periods(widget):
@@ -1203,9 +1269,7 @@ def add_days(widget):
     button=Button(daypag, text='ADD',width=20,bg='brown',fg='white',command=insertion).place(x=100,y=230)
     button=Button(daypag, text='REMOVE',width=20,bg='brown',fg='white',command=deleteday).place(x=250,y=230)
     button=Button(daypag, text='BACK TO PREVIOUS PAGE', width=40,bg='brown',fg='white',command=lambda:edit_database(daypag)).place(x=100,y=280)
-
-def timetablemodel(widget):
-    widget.destroy()
+def timetablemodel(CLASS_ID):
     root=Tk()
     root['bg']='black'
     entry=[]
@@ -1257,43 +1321,188 @@ def timetablemodel(widget):
             rc=[]
         new_window=Tk()
         new_window.geometry("300x300")
-        Label1=ttk.Label(new_window,text='Period_number')
+        Label1=Label(new_window,text='Period_number')
         Label1.place(x=10,y=30)
-        per_num=IntVar()
-        pn=ttk.Entry(new_window,textvariable=per_num)
-        pn.place(x=100,y=30)
+        Ldata=[0,0,0,0]
+        def emptying_list(widget):
+            pn=Ldata[0]
+            dn=Ldata[1]
+            Tid=Ldata[2]
+            Sc=Ldata[3]
+            click_Button(dn,pn,Tid,Sc,widget)
+        LPers=[]
+        L_PerS=[]
+        def viewpers():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from PERIODS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LPers.append(row[0])
+                   LPers.append(row[1])
+                   L_PerS.append(row[1])
+                cursor.close() 
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewpers()
+        print(LPers)
+        
+        def update1(FOO):
+            per_num=0
+            x=clicked.get()
+            x=str(x)
+            y=LPers.index(x)
+            print(int(LPers[y-1]),x)
+            per_num=int(LPers[y-1])
+            Ldata[0]=per_num
+        clicked=StringVar(new_window)
+        clicked.set('Periods')
+        drop=OptionMenu(new_window,clicked,*tuple(L_PerS),command=update1)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.place(x=100,y=30)
         Label1=ttk.Label(new_window,text='Day_number')
         Label1.place(x=10,y=80)
-        day_num=IntVar()
-        dn=ttk.Entry(new_window,textvariable=day_num)
-        dn.place(x=100,y=80)
+        LDAYS=[]
+        L_DAYS=[]
+        def viewDAYS():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from DAYS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LDAYS.append(row[0])
+                   LDAYS.append(row[1])
+                   L_DAYS.append(row[1])
+                   
+                cursor.close()
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewDAYS()
+        print(LDAYS)
+        def update2(FOO):
+            x=clicked1.get()
+            x=str(x)
+            y=LDAYS.index(x)
+            print(int(LDAYS[y-1]),x)
+            day_num=int(LDAYS[y-1])
+            Ldata[1]=day_num
+        clicked1=StringVar(new_window)
+        clicked1.set('Days')
+        drop=OptionMenu(new_window,clicked1,*tuple(L_DAYS),command=update2)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.place(x=100,y=80)
         Label1=ttk.Label(new_window,text='Teacher_id')
         Label1.place(x=10,y=130)
-        Teacher_id=IntVar()
-        ti=ttk.Entry(new_window,textvariable=Teacher_id)
-        ti.place(x=100,y=130)
+        Teacher_id=0
+        LTES=[]
+        L_TES=[]
+        def viewTES():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from TEACHERS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LTES.append(row[0])
+                   LTES.append(row[1])
+                   L_TES.append(row[1])
+                cursor.close()  
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewTES()
+        print(LTES)
+        def update3(FOO):
+            x=clicked2.get()
+            x=str(x)
+            y=LTES.index(x)
+            print(int(LTES[y-1]),x)
+            Teacher_id=int(LTES[y-1])
+            Ldata[2]=Teacher_id
+        clicked2=StringVar(new_window)
+        clicked2.set('TEACHERS')
+        drop=OptionMenu(new_window,clicked2,*tuple(L_TES),command=update3)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.place(x=100,y=130)
         Label1=ttk.Label(new_window,text='Subject_code')
         Label1.place(x=10,y=180)
-        Subject_code=IntVar()
-        sc=ttk.Entry(new_window,textvariable=Subject_code)
-        sc.place(x=100,y=180)
-        
-        
-        def click_Button(widget):
+        Subject_code=0
+        LSub=[]
+        L_Sub=[]
+        def viewSUB():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from SUBJECTS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LSub.append(row[0])
+                   LSub.append(row[1])
+                   L_Sub.append(row[1])
+                cursor.close()  
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewSUB()
+        print(LSub)
+        Subject_code=0
+        def update4(FOO):
+            x=clicked3.get()
+            x=str(x)
+            y=LSub.index(x)
+            print(int(LSub[y-1]),x)
+            Subject_code=int(LSub[y-1])
+            Ldata[3]=Subject_code
+        clicked3=StringVar(new_window)
+        clicked3.set('Subjects')
+        drop=OptionMenu(new_window,clicked3,*tuple(L_Sub),command=update4)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.place(x=100,y=180)
+       
+        def click_Button(day_num,per_num,Teacher_id,Subject_code,widget):
             widget.destroy()
             m=[]
             x=row
             y=column
-            global CLASS_ID
-            per_num=pn.get()
-            day_num=dn.get()
-            Teacher_id=ti.get()
-            Subject_code=sc.get()
             m.append(CLASS_ID)
             m.append(day_num)
             m.append(per_num)
             m.append(Teacher_id)
             m.append(Subject_code)
+            print(CLASS_ID)
+            print(m)
             dup=''
             for i in range (0,len(entry)):
                 if (entry[i][0]==CLASS_ID and entry[i][1]==day_num and entry[i][2]==per_num):
@@ -1307,11 +1516,54 @@ def timetablemodel(widget):
             m=[]
                 
             print(entry)
-            Btn2=ttk.Button(root,text=(Teacher_id,'\n',Subject_code),command=lambda row=x,column=y:command1(row,column))
+            def readonesubject(Subject_code):
+                id=Subject_code
+                try:
+                    conn = sqlite3.connect('test.db')
+                    cursor = conn.cursor()
+                    print("Connected to SQLite")
+
+                    sql_select_query = """select * from SUBJECTS where SUBJECT_CODE= ?"""
+                    cursor.execute(sql_select_query, (id,))
+                    records = cursor.fetchall()
+                    for row in records:
+                       SUBJECT_NAME = row[1]
+                    cursor.close()
+
+                except sqlite3.Error as error:
+                    print("Failed to read data from sqlite table", error)
+                finally:
+                    if (conn):
+                        conn.close()
+                        print("The SQLite connection is closed")
+                return(SUBJECT_NAME)
+            def readonerecord(Teacher_id):
+                id=Teacher_id
+                try:
+                    conn = sqlite3.connect('test.db')
+                    cursor = conn.cursor()
+                    print("Connected to SQLite")
+
+                    sql_select_query = """select * from TEACHERS where TEACHER_ID= ?"""
+                    cursor.execute(sql_select_query, (id,))
+                    records = cursor.fetchall()
+                    for row in records:
+                       TEACHER_NAME = row[1]
+                    cursor.close()
+
+                except sqlite3.Error as error:
+                    print("Failed to read data from sqlite table", error)
+                finally:
+                    if (conn):
+                        conn.close()
+                        print("The SQLite connection is closed")
+                return(TEACHER_NAME)
+                    
+            Btn2=ttk.Button(root,text=(readonerecord(Teacher_id),'\n',readonesubject(Subject_code)),command=lambda row=x,column=y:command1(row,column))
             Btn2.grid(row=x,column=y,ipadx=10,ipady=10,padx=2,pady=2)
             
             
-        Btn1=ttk.Button(new_window,text='Fill Entry',command=lambda:click_Button(new_window))
+        Btn1=ttk.Button(new_window,text='Fill Entry',command=lambda:emptying_list(new_window))
         style.configure('Btn1',background='brown',foreground='black')
         Btn1.place(x=130,y=230)
     for x in range(1,10):
@@ -1354,24 +1606,63 @@ def timetablemodel(widget):
     style.configure("normal.TLabel",width=30,height=30)
     root.mainloop()
 
+
 def sure(widget):
     widget.destroy()
+    Id=[]
+    I_d=[]
+    def viewclasses():
+        try:
+            conn = sqlite3.connect('test.db')
+            cursor = conn.cursor()
+            print("Connected to SQLite")
+            sqlite_select_query = """SELECT * from CLASS"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            rows=len(records)
+            print("Printing each row")
+            for row in records:
+               Id.append(row[0])
+               Id.append(row[1])
+               I_d.append(row[1])
+            cursor.close()
+        except sqlite3.Error as error:
+            print("Failed to read data from sqlite table", error)
+        finally:
+            if (conn):
+                conn.close()
+                print("The SQLite connection is closed")
+    viewclasses()
     new=Tk()
     new.geometry("300x200")
-    ttk.Label(new,text='ENTER CLASS_ID:').place(x=10,y=30)
-    Class_id=IntVar()
-    Entry1=ttk.Entry(new,textvariable=Class_id)
-    Entry1.place(x=150,y=30)
-    def com():
-       Class_id=Entry1.get()
-       global CLASS_ID
-       CLASS_ID=Class_id
-       timetablemodel()
+    Label(new,text='SELECT CLASS',font=("Calibri",16,'bold')).pack()
+    ids=[0]
+    def update(FOO):
+        Class_name=clicked.get()
+        Class_name=str(Class_name)
+        global ClASS_ID
+        y=Id.index(Class_name)
+        print(Id[y-1],Class_name)
+        CLASS_ID=Id[y-1]
+        ids[0]=CLASS_ID
+        print(CLASS_ID)
+    print(CLASS_ID)
+    print(ids[0])
+
+
+    clicked=StringVar(new)
+    clicked.set('CLASSES')
+    drop=OptionMenu(new,clicked,*tuple(I_d),command=update)
+    drop.configure(width=40,height=3,background='white',foreground='black')
+    drop.pack()
             
-    Btn1=ttk.Button(new,text="CREATE TIMETABLE:",command=com)
-    Btn1.place(x=100,y=80)
-    Btn1=ttk.Button(new,text="BACK TO MENU",command=lambda:back_to_menu(new))
-    Btn1.place(x=100,y=100)
+    Btn1=Button(new,text="CREATE TIMETABLE",bg='brown',fg='black',font=("Calibri",10,'bold'),command=lambda:timetablemodel(ids[0]))
+    Btn1.pack()
+    Label(new,text='').pack()
+    Btn1=Button(new,text="BACK TO MENU",bg='brown',fg='black',font=("Calibri",10,'bold'),command=lambda:back_to_menu(new))
+    Btn1.pack()
+
+       
 
 def view_timetable(widget):
     widget.destroy()
@@ -1381,24 +1672,129 @@ def view_timetable(widget):
         widget.destroy()
         chckper=Tk()
         chckper.geometry('500x500')
+        Data=[0,0,0]
         Label(chckper,text='Enter CLASS_ID').pack()
-        Class_id=IntVar()
-        cid=Entry(chckper,textvariable=Class_id)
-        cid.pack()
+        L1=[]
+        L_r=[]
+        def viewclasses():
+           try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from CLASS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   L1.append(row[0])
+                   L1.append(row[1])
+                   L_r.append(row[1])
+                   print('Command executed successfully')
+                cursor.close()  
+           except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+           finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewclasses()
+        print(L1)
+        def updateme(FOO):
+            Class_id=0
+            x=clickedme.get()
+            x=str(x)
+            y=L1.index(x)
+            print(int(L1[y-1]),x)
+            Class_id=int(L1[y-1])
+            Data[0]=Class_id
+        clickedme=StringVar(chckper)
+        clickedme.set('Classes')
+        drop=OptionMenu(chckper,clickedme,*tuple(L_r),command=updateme)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Label(chckper,text='Enter DAY_NUMBER').pack()
-        daynum=IntVar()
-        dnu=Entry(chckper,textvariable=daynum)
-        dnu.pack()
+        LDAYS=[]
+        L_DAYS=[]
+        def viewDAYS():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from DAYS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LDAYS.append(row[0])
+                   LDAYS.append(row[1])
+                   L_DAYS.append(row[1])
+                   
+                cursor.close()
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewDAYS()
+        print(LDAYS)
+        def update2(FOO):
+            x=clicked1.get()
+            x=str(x)
+            y=LDAYS.index(x)
+            print(int(LDAYS[y-1]),x)
+            day_num=int(LDAYS[y-1])
+            Data[1]=day_num
+        clicked1=StringVar(chckper)
+        clicked1.set('Days')
+        drop=OptionMenu(chckper,clicked1,*tuple(L_DAYS),command=update2)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Label(chckper,text='Enter PERIOD_NUMBER').pack()
-        pernum=IntVar()
-        pnu=Entry(chckper,textvariable=pernum)
-        pnu.pack()
+        LPers=[]
+        L_PerS=[]
+        def viewpers():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from PERIODS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LPers.append(row[0])
+                   LPers.append(row[1])
+                   L_PerS.append(row[1])
+                cursor.close() 
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewpers()
+        print(LPers)
+        
+        def update1(FOO):
+            per_num=0
+            x=clicked.get()
+            x=str(x)
+            y=LPers.index(x)
+            print(int(LPers[y-1]),x)
+            per_num=int(LPers[y-1])
+            Data[2]=per_num
+        clicked=StringVar(chckper)
+        clicked.set('Periods')
+        drop=OptionMenu(chckper,clicked,*tuple(L_PerS),command=update1)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Button(chckper,text='BACK',command=lambda:view_timetable(chckper)).pack()
         
-        def showdetails():
-            Class_id=cid.get()
-            daynum=dnu.get()
-            pernum=pnu.get()
+        def showdetails(Class_id,daynum,pernum):
             
             def joinedtimetable():
                 try:
@@ -1422,7 +1818,7 @@ def view_timetable(widget):
                                             ON TEACHERS.TEACHER_ID=TIMETABLE.TEACHER_ID
                                             INNER JOIN SUBJECTS
                                             ON SUBJECTS.SUBJECT_CODE=TIMETABLE.SUBJECT_CODE
-                                            WHERE (TIMETABLE.CLASS_ID,TIMETABLE.DAY_NUMBER,TIMETABLE.PERIOD_NUMBER)=(?,?,?)
+                                            WHERE TIMETABLE.CLASS_ID = ? and TIMETABLE.DAY_NUMBER=? and TIMETABLE.PERIOD_NUMBER = ?
                                             ORDER BY TIMETABLE.PERIOD_NUMBER"""
                     cursor.execute(sqlite_select_query,(Class_id,daynum,pernum))
                     records = cursor.fetchall()
@@ -1451,28 +1847,64 @@ def view_timetable(widget):
                         conn.close()
                         print("The SQLite connection is closed")
             joinedtimetable()
-        Button(chckper,text='SHOW DETAILS',command=showdetails).pack()
+        Button(chckper,text='SHOW DETAILS',command=lambda:showdetails(Data[0],Data[1],Data[2])).pack()
         Label(chckper,text='').pack()
        
 
-    Btn1=Button(viewtimetable,text="Check for a single period",height='2',width='40',command=lambda:checkperiod(viewtimetable))
+    Btn1=Button(viewtimetable,text="Check for a single period",height='2',width='40',bg='white',fg='black',font=("Arial",10,'bold'),command=lambda:checkperiod(viewtimetable))
     Btn1.place(x=50,y=30)
     def checkteacher(widget):
         widget.destroy()
         chckter=Tk()
         chckter.geometry('500x500')
+        cc=[0]
         Label(chckter,text='Enter TEACHER_ID').place(x=10,y=50)
-        teacher_id=IntVar()
-        tid=Entry(chckter,textvariable=teacher_id)
+        LTES=[]
+        L_TES=[]
+        def viewTES():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from TEACHERS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LTES.append(row[0])
+                   LTES.append(row[1])
+                   L_TES.append(row[1])
+                cursor.close()  
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewTES()
+        print(LTES)
+        def update3(FOO):
+            x=clicked2.get()
+            x=str(x)
+            y=LTES.index(x)
+            print(int(LTES[y-1]),x)
+            Teacher_id=int(LTES[y-1])
+            cc[0]=Teacher_id
+        clicked2=StringVar(chckter)
+        clicked2.set('TEACHERS')
+        drop=OptionMenu(chckter,clicked2,*tuple(L_TES),command=update3)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.place(x=130,y=50)
+    
         Butn2=Button(chckter,text='BACK',command=lambda:view_timetable(chckter))
         Butn2.place(x=10,y=70)
 
         
-        tid.place(x=150,y=50)
+        
         LT=['CLASS_NAME','DAY_NAME','PERIOD_NAME','TEACHER_NAME','SUBJECT_NAME']
        
-        def showtdetails():
-            teacher_id=tid.get()
+        def showtdetails(teacher_id):
             def joinedtimetable():
                 try:
                     conn = sqlite3.connect('test.db')
@@ -1496,7 +1928,7 @@ def view_timetable(widget):
                                             INNER JOIN SUBJECTS
                                             ON SUBJECTS.SUBJECT_CODE=TIMETABLE.SUBJECT_CODE
                                             WHERE TIMETABLE.TEACHER_ID=?
-                                            ORDER BY TIMETABLE.DAYNUMBER,TIMETABLE.PERIOD_NUMBER
+                                            ORDER BY TIMETABLE.DAY_NUMBER,TIMETABLE.PERIOD_NUMBER
                                             """
                     cursor.execute(sqlite_select_query,(teacher_id,))
                     records = cursor.fetchall()
@@ -1514,15 +1946,12 @@ def view_timetable(widget):
                     z=0
                     for x in range(1,rows+3):
                         if x==1:
-                            ttk.Label(table,text="TEACHERS TIMETABLE",anchor='center',style="head.TLabel",width=100).grid(row=1,columnspan=10,ipadx=10,ipady=10)
+                            Label(table,text="TEACHERS TIMETABLE",background='black',foreground='white',font=("Arial","10","bold"),width=70).grid(row=1,columnspan=10,ipadx=10,ipady=10)
                         else:
                             for y in range(5):
-                                ttk.Label(table,text=LT[z],style="normal.TLabel",anchor='center').grid(row=x,column=y,ipadx=10,ipady=10,pady=2,padx=2)
+                                Label(table,text=LT[z],width=10,background="cyan",foreground="black").grid(row=x,column=y,ipadx=10,ipady=10,pady=2,padx=2)
                                 z+=1
-                    style=ttk.Style()
-                    style.theme_use("clam")
-                    style.configure("head.TLabel",width=120,align="center",background='#282828',foreground='white',font=("Arial","10","bold"))
-                    style.configure("normal.TLabel",width=10,background="cyan",foreground="black")
+                    
                     
                 except sqlite3.Error as error:
                     print("Failed to read data from sqlite table", error)
@@ -1531,30 +1960,102 @@ def view_timetable(widget):
                         conn.close()
                         print("The SQLite connection is closed")
             joinedtimetable()
-        Button(chckter,text='SHOW DETAILS',command=showtdetails).place(x=130,y=80)
+        Button(chckter,text='SHOW DETAILS',command=lambda:showtdetails(cc[0])).place(x=130,y=80)
 
         
-    Btn2=Button(viewtimetable,text="Check by teacher",height='2',width='40',command=lambda:checkteacher(viewtimetable))
+    Btn2=Button(viewtimetable,text="Check by teacher",height='2',width='40',bg='white',fg='black',font=("Arial",10,'bold'),command=lambda:checkteacher(viewtimetable))
     Btn2.place(x=50,y=80)
 
     def checkday(widget):
         widget.destroy()
         chckper=Tk()
         chckper.geometry('500x500')
+        well=[0,0]
         Label(chckper,text='Enter CLASS_ID').pack()
-        Class_id=IntVar()
-        cid=Entry(chckper,textvariable=Class_id)
-        cid.pack()
+        L1=[]
+        L_r=[]
+        def viewclasses():
+           try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from CLASS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   L1.append(row[0])
+                   L1.append(row[1])
+                   L_r.append(row[1])
+                   print('Command executed successfully')
+                cursor.close()  
+           except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+           finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewclasses()
+        print(L1)
+        def updateme(FOO):
+            Class_id=0
+            x=clickedme.get()
+            x=str(x)
+            y=L1.index(x)
+            print(int(L1[y-1]),x)
+            Class_id=int(L1[y-1])
+            well[0]=Class_id
+        clickedme=StringVar(chckper)
+        clickedme.set('Classes')
+        drop=OptionMenu(chckper,clickedme,*tuple(L_r),command=updateme)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Label(chckper,text='Enter DAY_NUMBER').pack()
-        daynum=IntVar()
-        dnu=Entry(chckper,textvariable=daynum)
-        dnu.pack()
+        LDAYS=[]
+        L_DAYS=[]
+        def viewDAYS():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from DAYS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LDAYS.append(row[0])
+                   LDAYS.append(row[1])
+                   L_DAYS.append(row[1])
+                   
+                cursor.close()
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewDAYS()
+        print(LDAYS)
+        def update2(FOO):
+            x=clicked1.get()
+            x=str(x)
+            y=LDAYS.index(x)
+            print(int(LDAYS[y-1]),x)
+            day_num=int(LDAYS[y-1])
+            well[1]=day_num
+        clicked1=StringVar(chckper)
+        clicked1.set('Days')
+        drop=OptionMenu(chckper,clicked1,*tuple(L_DAYS),command=update2)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Button(chckper,text='Back',command=lambda:view_timetable(chckper)).pack()
         
-        def showdetails():
-            Class_id=cid.get()
-            daynum=dnu.get()
-
+        def showdetails(id,dnum):
+            Class_id=id
+            daynum=dnum
+            tabl=['PERIOD','TEACHER','SUBJECT']
             def joinedtimetable():
                 try:
                     conn = sqlite3.connect('test.db')
@@ -1577,28 +2078,35 @@ def view_timetable(widget):
                                             ON TEACHERS.TEACHER_ID=TIMETABLE.TEACHER_ID
                                             INNER JOIN SUBJECTS
                                             ON SUBJECTS.SUBJECT_CODE=TIMETABLE.SUBJECT_CODE
-                                            WHERE (TIMETABLE.CLASS_ID,TIMETABLE.DAY_NUMBER)=(?,?)
+                                            WHERE TIMETABLE.CLASS_ID = ? and TIMETABLE.DAY_NUMBER=?
                                             ORDER BY TIMETABLE.PERIOD_NUMBER"""
                     cursor.execute(sqlite_select_query,(Class_id,daynum))
                     records = cursor.fetchall()
+                    rows=len(records)
                     print("Total rows are:  ", len(records))
                     print("Printing each row")
                     for row in records:
                        CLASS_NAME=row[0]
                        DAY_NAME=row[1]
-                       PERIOD_NAME=row[2]
-                       TEACHER_NAME=row[3]
-                       SUBJECT_NAME=row[4]
-                       Label(chckper,text='DAY_NAME:').pack()
-                       Label(chckper,text=DAY_NAME).pack()
-                       Label(chckper,text='CLASS_NAME:').pack()
-                       Label(chckper,text=CLASS_NAME).pack()
-                       Label(chckper,text='PERIOD_NAME:').pack()
-                       Label(chckper,text=PERIOD_NAME).pack()
-                       Label(chckper,text='TEACHER_NAME:').pack()
-                       Label(chckper,text=TEACHER_NAME).pack()
-                       Label(chckper,text='SUBJECT_NAME').pack()
-                       Label(chckper,text=SUBJECT_NAME).pack()
+                       tabl.append(row[2])
+                       tabl.append(row[3])
+                       tabl.append(row[4])
+                       
+                    cursor.close()
+                    table=Tk()
+                    z=0
+                    for x in range(1,rows+3):
+                        if x==1:
+                            Label(table,text="TIMETABLE",background='black',foreground='white',font=("Arial","10",'bold'),width=60).grid(row=1,columnspan=3,ipadx=10,ipady=10)
+                        else:
+                            for y in range(3):
+                                Label(table,text=tabl[z],background='cyan',foreground='black',width=10).grid(row=x,column=y,ipadx=10,ipady=10,pady=2,padx=2)
+                                z+=1
+                    style=ttk.Style()
+                    style.theme_use("clam")
+                    style.configure("head.TLabel",width=120,align="center",background='#282828',foreground='white',font=("Arial","10","bold"))
+                    style.configure("normal.TLabel",width=10,background="cyan",foreground="black")
+    
                 except sqlite3.Error as error:
                     print("Failed to read data from sqlite table", error)
                 finally:
@@ -1606,44 +2114,220 @@ def view_timetable(widget):
                         conn.close()
                         print("The SQLite connection is closed")
             joinedtimetable()
-        Button(chckper,text='SHOW DETAILS',command=showdetails).pack()
+        Button(chckper,text='SHOW DETAILS',command=lambda:showdetails(well[0],well[1])).pack()
         Label(chckper,text='').pack()
 
-    Btn2=Button(viewtimetable,text="Check by day",height='2',width='40',command=lambda:checkday(viewtimetable))
+    Btn2=Button(viewtimetable,text="Check by day",height='2',width='40',bg='white',fg='black',font=("Arial",10,'bold'),command=lambda:checkday(viewtimetable))
     Btn2.place(x=50,y=130)
 
     def updateperiod(widget):
         widget.destroy()
         chckper=Tk()
         chckper.geometry('500x500')
+        upc=[0,0,0,0,0]
         Label(chckper,text='Enter CLASS_ID for class to be updated').pack()
-        Class_id=IntVar()
-        cid=Entry(chckper,textvariable=Class_id)
-        cid.pack()
+        Label(chckper,text='Enter CLASS_ID').pack()
+        L1=[]
+        L_r=[]
+        def viewclasses():
+           try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from CLASS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   L1.append(row[0])
+                   L1.append(row[1])
+                   L_r.append(row[1])
+                   print('Command executed successfully')
+                cursor.close()  
+           except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+           finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewclasses()
+        print(L1)
+        def updateme(FOO):
+            Class_id=0
+            x=clickedme.get()
+            x=str(x)
+            y=L1.index(x)
+            print(int(L1[y-1]),x)
+            Class_id=int(L1[y-1])
+            upc[0]=Class_id
+        clickedme=StringVar(chckper)
+        clickedme.set('Classes')
+        drop=OptionMenu(chckper,clickedme,*tuple(L_r),command=updateme)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
+
         Label(chckper,text='Enter DAY_NUMBER to be updated').pack()
-        daynum=IntVar()
-        dnu=Entry(chckper,textvariable=daynum)
-        dnu.pack()
+        LDAYS=[]
+        L_DAYS=[]
+        def viewDAYS():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from DAYS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LDAYS.append(row[0])
+                   LDAYS.append(row[1])
+                   L_DAYS.append(row[1])
+                   
+                cursor.close()
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewDAYS()
+        print(LDAYS)
+        def update2(FOO):
+            x=clicked1.get()
+            x=str(x)
+            y=LDAYS.index(x)
+            print(int(LDAYS[y-1]),x)
+            day_num=int(LDAYS[y-1])
+            upc[1]=day_num
+        clicked1=StringVar(chckper)
+        clicked1.set('Days')
+        drop=OptionMenu(chckper,clicked1,*tuple(L_DAYS),command=update2)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Label(chckper,text='Enter PERIOD_NUMBER to be updated').pack()
-        pernum=IntVar()
-        pnu=Entry(chckper,textvariable=pernum)
-        pnu.pack()
+        LPers=[]
+        L_PerS=[]
+        def viewpers():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from PERIODS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LPers.append(row[0])
+                   LPers.append(row[1])
+                   L_PerS.append(row[1])
+                cursor.close() 
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewpers()
+        print(LPers)
+        
+        def update1(FOO):
+            per_num=0
+            x=clicked.get()
+            x=str(x)
+            y=LPers.index(x)
+            print(int(LPers[y-1]),x)
+            per_num=int(LPers[y-1])
+            upc[2]=per_num
+        clicked=StringVar(chckper)
+        clicked.set('Periods')
+        drop=OptionMenu(chckper,clicked,*tuple(L_PerS),command=update1)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Label(chckper,text='Enter updated TEACHER_ID').pack()
-        teacher_id=IntVar()
-        tid=Entry(chckper,textvariable=teacher_id)
-        tid.pack()
+        LTES=[]
+        L_TES=[]
+        def viewTES():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from TEACHERS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   LTES.append(row[0])
+                   LTES.append(row[1])
+                   L_TES.append(row[1])
+                cursor.close()  
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewTES()
+        print(LTES)
+        def update3(FOO):
+            x=clicked2.get()
+            x=str(x)
+            y=LTES.index(x)
+            print(int(LTES[y-1]),x)
+            Teacher_id=int(LTES[y-1])
+            upc[3]=Teacher_id
+        clicked2=StringVar(chckper)
+        clicked2.set('TEACHERS')
+        drop=OptionMenu(chckper,clicked2,*tuple(L_TES),command=update3)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
+    
         Label(chckper,text='Enter updated SUBJECT_CODE').pack()
-        subject_code=IntVar()
-        sid=Entry(chckper,textvariable=subject_code)
-        sid.pack()
+        LSub=[]
+        L_Sub=[]
+        def viewSUB():
+            try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from SUBJECTS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                    LSub.append(row[0])
+                    LSub.append(row[1])
+                    L_Sub.append(row[1])
+                cursor.close()  
+            except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+            finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewSUB()
+        print(LSub)
+        Subject_code=0
+        def update4(FOO):
+            x=clicked3.get()
+            x=str(x)
+            y=LSub.index(x)
+            print(int(LSub[y-1]),x)
+            Subject_code=int(LSub[y-1])
+            upc[4]=Subject_code
+        clicked3=StringVar(chckper)
+        clicked3.set('Subjects')
+        drop=OptionMenu(chckper,clicked3,*tuple(L_Sub),command=update4)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
+
         Button(chckper,text='BACK',command=lambda:view_timetable(chckper)).pack()
         
-        def showdetails():
-            Class_id=cid.get()
-            daynum=dnu.get()
-            pernum=pnu.get()
-            teacher_id=tid.get()
-            subject_code=sid.get()
+        def showdetails(Class_id,daynum,pernum,teacher_id,subject_code):
 
             def joinedtimetable():
                 try:
@@ -1651,7 +2335,7 @@ def view_timetable(widget):
                     cursor = conn.cursor()
                     print("Connected to SQLite")
 
-                    sqlite_select_query = """Update TIMETABLE set (TEACHER_ID,SUBJECT_CODE) = (?,?) where (CLASS_ID,DAY_NUMBER,PERIOD_NUMBER) = (?,?,?)"""
+                    sqlite_select_query = """Update TIMETABLE set TEACHER_ID=? and SUBJECT_CODE =? where CLASS_ID=? and DAY_NUMBER=? and PERIOD_NUMBER =? """
                     data=(teacher_id,subject_code,Class_id,daynum,pernum)
                     cursor.execute(sqlite_select_query,data)
                     conn.commit()
@@ -1665,10 +2349,10 @@ def view_timetable(widget):
                         conn.close()
                         print("The SQLite connection is closed")
             joinedtimetable()
-        Button(chckper,text='UPDATE RECORD',command=showdetails).pack()
+        Button(chckper,text='UPDATE RECORD',command=lambda:showdetails(upc[0],upc[1],upc[2],upc[3],upc[4])).pack()
         Label(chckper,text='').pack()
 
-    Btn2=Button(viewtimetable,text="Update a period",height='2',width='40',command=lambda:updateperiod(viewtimetable))
+    Btn2=Button(viewtimetable,text="Update a period",height='2',width='40',bg='white',fg='black',font=("Arial",10,'bold'),command=lambda:updateperiod(viewtimetable))
     Btn2.place(x=50,y=180)
 
     def viewwholedatabase(widget):
@@ -1676,14 +2360,50 @@ def view_timetable(widget):
         chckter=Tk()
         chckter.geometry('300x200')
         Label(chckter,text='Enter CLASS_ID').place(x=10,y=50)
-        teacher_id=IntVar()
-        tid=Entry(chckter,textvariable=teacher_id)
-        tid.place(x=150,y=50)
-        Button(chckter,text='BACK',command=lambda:view_timetable(chckter)).place(x=10,y=150)
+        com=[0]
+        L1=[]
+        L_r=[]
+        def viewclasses():
+           try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from CLASS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   L1.append(row[0])
+                   L1.append(row[1])
+                   L_r.append(row[1])
+                   print('Command executed successfully')
+                cursor.close()  
+           except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+           finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewclasses()
+        print(L1)
+        def updateme(FOO):
+            Class_id=0
+            x=clickedme.get()
+            x=str(x)
+            y=L1.index(x)
+            print(int(L1[y-1]),x)
+            Class_id=int(L1[y-1])
+            com[0]=Class_id
+        clickedme=StringVar(chckter)
+        clickedme.set('Classes')
+        drop=OptionMenu(chckter,clickedme,*tuple(L_r),command=updateme)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.place(x=150,y=50)
+        Button(chckter,text='BACK',command=lambda:view_timetable(chckter)).place(x=10,y=80)
         LTW=['CLASS_NAME','DAY_NUMBER','DAY_NAME','PERIOD_NUMBER','PERIOD_NAME','TEACHER_ID','TEACHER_NAME','SUBJECT_CODE','SUBJECT_NAME']
        
-        def showtdetails():
-            teacher_id=tid.get()
+        def showtdetails(teacher_id):
             def joinedtimetable():
                 try:
                     conn = sqlite3.connect('test.db')
@@ -1734,10 +2454,10 @@ def view_timetable(widget):
                     z=0
                     for x in range(1,rows+3):
                         if x==1:
-                            ttk.Label(table,text='CLASS TIMETABLE DATABASE',anchor='center',style="head.TLabel",width=100).grid(row=1,columnspan=10,ipadx=10,ipady=10)
+                            Label(table,text='CLASS TIMETABLE DATABASE',background='black',foreground='white',font=("Arial","10","bold"),width=100).grid(row=1,columnspan=10,ipadx=10,ipady=10)
                         else:
                             for y in range(9):
-                                ttk.Label(table,text=LTW[z],style="normal.TLabel",anchor='center').grid(row=x,column=y,ipadx=10,ipady=10,pady=2,padx=2)
+                                Label(table,text=LTW[z],width=10,background="cyan",foreground="black").grid(row=x,column=y,ipadx=10,ipady=10,pady=2,padx=2)
                                 z+=1
                     style=ttk.Style()
                     style.theme_use("clam")
@@ -1751,11 +2471,11 @@ def view_timetable(widget):
                         conn.close()
                         print("The SQLite connection is closed")
             joinedtimetable()
-        Button(chckter,text='SHOW',command=showtdetails).place(x=130,y=80)
+        Button(chckter,text='SHOW',command=lambda:showtdetails(com[0])).place(x=130,y=80)
         
 
         
-    Btn2=Button(viewtimetable,text="View Class Timetable Database",height='2',width='40',command=lambda:viewwholedatabase(viewtimetable))
+    Btn2=Button(viewtimetable,text="View Class Timetable Database",height='2',width='40',bg='white',fg='black',font=("Arial",10,'bold'),command=lambda:viewwholedatabase(viewtimetable))
     Btn2.place(x=50,y=230)
     
     
@@ -1765,13 +2485,49 @@ def view_timetable(widget):
         chckter=Tk()
         chckter.geometry('400x200')
         Label(chckter,text='Enter CLASS_ID of Class to be deleted').pack()
-        teacher_id=IntVar()
-        tid=Entry(chckter,textvariable=teacher_id)
-        tid.pack()
+        con=[0]
+        L1=[]
+        L_r=[]
+        def viewclasses():
+           try:
+                conn = sqlite3.connect('test.db')
+                cursor = conn.cursor()
+                print("Connected to SQLite")
+                sqlite_select_query = """SELECT * from CLASS"""
+                cursor.execute(sqlite_select_query)
+                records = cursor.fetchall()
+                rows=len(records)
+                print("Printing each row")
+                for row in records:
+                   L1.append(row[0])
+                   L1.append(row[1])
+                   L_r.append(row[1])
+                   print('Command executed successfully')
+                cursor.close()  
+           except sqlite3.Error as error:
+                print("Failed to read data from sqlite table", error)
+           finally:
+                if (conn):
+                    conn.close()
+                    print("The SQLite connection is closed")
+        viewclasses()
+        print(L1)
+        def updateme(FOO):
+            Class_id=0
+            x=clickedme.get()
+            x=str(x)
+            y=L1.index(x)
+            print(int(L1[y-1]),x)
+            Class_id=int(L1[y-1])
+            con[0]=Class_id
+        clickedme=StringVar(chckter)
+        clickedme.set('Classes')
+        drop=OptionMenu(chckter,clickedme,*tuple(L_r),command=updateme)
+        drop.configure(width=10,height=1,background='white',foreground='black')
+        drop.pack()
         Button(chckter,text='BACK',command=lambda:view_timetable(chckter)).pack()
 
-        def deleteSqliteRecord():
-            teacher_id=tid.get()
+        def deleteSqliteRecord(teacher_id):
             try:
                 conn = sqlite3.connect('test.db')
                 cursor = conn.cursor()
@@ -1791,14 +2547,12 @@ def view_timetable(widget):
                     conn.close()
                     print("sqlite connection is closed")
         
-        Button(chckter,text='DELETE',command=deleteSqliteRecord).pack()
-    Btn2=Button(viewtimetable,text="DELETE CLASS TIMETABLE",height='2',width='40',command=lambda:deletetimetable(viewtimetable))
+        Button(chckter,text='DELETE',command=lambda:deleteSqliteRecord(con[0])).pack()
+    Btn2=Button(viewtimetable,text="DELETE CLASS TIMETABLE",height='2',width='40',bg='white',fg='black',font=("Arial",10,'bold'),command=lambda:deletetimetable(viewtimetable))
     Btn2.place(x=50,y=280)
     
-    Btn2=Button(viewtimetable,text="Back To Menu",height='2',width='40',command=lambda:back_to_menu(viewtimetable))
+    Btn2=Button(viewtimetable,text="Back To Menu",height='2',width='40',bg='white',fg='black',font=("Arial",10,'bold'),command=lambda:back_to_menu(viewtimetable))
     Btn2.place(x=50,y=320)
-    
-
 
 
 def Up_del_teachers(widget):
@@ -1806,12 +2560,46 @@ def Up_del_teachers(widget):
     updo=Tk()
     updo.geometry("300x600")
     Label(updo,text='Enter TEACHER_ID to be updated or deleted').pack()
-    tech_id=IntVar()
-    tid=Entry(updo,textvariable=tech_id)
-    tid.pack()
+    tech_id=[0]
+    LTES=[]
+    L_TES=[]
+    def viewTES():
+        try:
+            conn = sqlite3.connect('test.db')
+            cursor = conn.cursor()
+            print("Connected to SQLite")
+            sqlite_select_query = """SELECT * from TEACHERS"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            rows=len(records)
+            print("Printing each row")
+            for row in records:
+                LTES.append(row[0])
+                LTES.append(row[1])
+                L_TES.append(row[1])
+            cursor.close()  
+        except sqlite3.Error as error:
+            print("Failed to read data from sqlite table", error)
+        finally:
+            if (conn):
+                conn.close()
+                print("The SQLite connection is closed")
+    viewTES()
+    print(LTES)
+    def update3(FOO):
+        x=clicked2.get()
+        x=str(x)
+        y=LTES.index(x)
+        print(int(LTES[y-1]),x)
+        Teacher_id=int(LTES[y-1])
+        tech_id[0]=Teacher_id
+    clicked2=StringVar(updo)
+    clicked2.set('TEACHERS')
+    drop=OptionMenu(updo,clicked2,*tuple(L_TES),command=update3)
+    drop.configure(width=10,height=1,background='white',foreground='black')
+    drop.pack()
     Label(updo,text='').pack()
-    def updation():
-        tech_id=tid.get()
+    def updation(tech_id):
         Label(updo,text='Enter NEW TEACHER_NAME').pack()
         tech_name=StringVar()
         tn=Entry(updo,textvariable=tech_name)
@@ -1828,8 +2616,7 @@ def Up_del_teachers(widget):
         email=StringVar()
         em=Entry(updo,textvariable=email)
         em.pack()
-        def updateSqliteTable():
-            tech_id=tid.get()
+        def updateSqliteTable(tech_id):
             tech_name=tn.get()
             week_hour=wh.get()
             conpho=cp.get()
@@ -1839,7 +2626,7 @@ def Up_del_teachers(widget):
                 cursor = conn.cursor()
                 print("Connected to SQLite")
 
-                sql_update_query = """Update TEACHERS set (TEACHER_NAME,WEEKHOURS,CONTACT_PHONE,CONTACT_EMAIL) = (?,?,?,?) where TEACHER_ID = ?"""
+                sql_update_query = """Update TEACHERS set TEACHER_NAME=? and WEEKHOURS=? and CONTACT_PHONE=? and CONTACT_EMAIL = ? where TEACHER_ID = ?"""
                 data = (tech_name,week_hour,conpho,email,tech_id)
                 cursor.execute(sql_update_query, data)
                 conn.commit()
@@ -1853,10 +2640,10 @@ def Up_del_teachers(widget):
                     conn.close()
                     print("The sqlite connection is closed")
                 
-        Btn2=Button(updo,text='UPDATE TEACHER',command=updateSqliteTable).pack()
-    Btn1=Button(updo,text="UPDATE",command=updation).pack()
+        Btn2=Button(updo,text='UPDATE TEACHER',command=lambda:updateSqliteTable(tech_id)).pack()
+    Btn1=Button(updo,text="UPDATE",command=lambda:updation(tech_id[0])).pack()
     Label(updo,text='').pack()
-    def deleteteacher():
+    def deleteteacher(tech_id):
         tech_id=tid.get()
         try:
             conn = sqlite3.connect('test.db')
@@ -1876,7 +2663,7 @@ def Up_del_teachers(widget):
             if (conn):
                 conn.close()
                 print("sqlite connection is closed")
-    Btn1=Button(updo,text="DELETE",command=deleteteacher).pack()
+    Btn1=Button(updo,text="DELETE",command=lambda:deleteteacher(tech_id[0])).pack()
     Label(updo,text='').pack()
     Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
@@ -1885,18 +2672,52 @@ def Up_del_classes(widget):
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter CLASS_ID to be updated or deleted').pack()
-    tech_id=IntVar()
-    tid=Entry(updo,textvariable=tech_id)
-    tid.pack()
+    con=[0]
+    L1=[]
+    L_r=[]
+    def viewclasses():
+       try:
+            conn = sqlite3.connect('test.db')
+            cursor = conn.cursor()
+            print("Connected to SQLite")
+            sqlite_select_query = """SELECT * from CLASS"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            rows=len(records)
+            print("Printing each row")
+            for row in records:
+                L1.append(row[0])
+                L1.append(row[1])
+                L_r.append(row[1])
+            print('Command executed successfully')
+            cursor.close()  
+       except sqlite3.Error as error:
+            print("Failed to read data from sqlite table", error)
+       finally:
+            if (conn):
+                conn.close()
+                print("The SQLite connection is closed")
+    viewclasses()
+    print(L1)
+    def updateme(FOO):
+        Class_id=0
+        x=clickedme.get()
+        y=L1.index(x)
+        print(int(L1[y-1]),x)
+        Class_id=int(L1[y-1])
+        con[0]=Class_id
+    clickedme=StringVar(updo)
+    clickedme.set('Classes')
+    drop=OptionMenu(updo,clickedme,*tuple(L_r),command=updateme)
+    drop.configure(width=10,height=1,background='white',foreground='black')
+    drop.pack()
     Label(updo,text='').pack()
-    def updation():
-        tech_id=tid.get()
+    def updation(tech_id):
         Label(updo,text='Enter NEW CLASS_NAME').pack()
         tech_name=StringVar()
         tn=Entry(updo,textvariable=tech_name)
         tn.pack()
-        def updateSqliteTable():
-            tech_id=tid.get()
+        def updateSqliteTable(tech_id):
             tech_name=tn.get()
             try:
                 conn = sqlite3.connect('test.db')
@@ -1917,11 +2738,10 @@ def Up_del_classes(widget):
                     conn.close()
                     print("The sqlite connection is closed")
                 
-        Btn2=Button(updo,text='UPDATE CLASS',command=updateSqliteTable).pack()
-    Btn1=Button(updo,text="UPDATE",command=updation).pack()
+        Btn2=Button(updo,text='UPDATE CLASS',command=lambda:updateSqliteTable(tech_id)).pack()
+    Btn1=Button(updo,text="UPDATE",command=lambda:updation(con[0])).pack()
     Label(updo,text='').pack()
-    def deleteclass():
-        tech_id=tid.get()
+    def deleteclass(tech_id):
         try:
             conn = sqlite3.connect('test.db')
             cursor = conn.cursor()
@@ -1940,7 +2760,7 @@ def Up_del_classes(widget):
             if (conn):
                 conn.close()
                 print("sqlite connection is closed")
-    Btn1=Button(updo,text="DELETE",command=deleteclass).pack()
+    Btn1=Button(updo,text="DELETE",command=lambda:deleteclass(con[0])).pack()
     Label(updo,text='').pack()
     Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
@@ -1950,18 +2770,51 @@ def Up_del_subjects(widget):
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter SUBJECT_CODE to be updated or deleted').pack()
-    tech_id=IntVar()
-    tid=Entry(updo,textvariable=tech_id)
-    tid.pack()
+    Subject_code=[0]
+    LSub=[]
+    L_Sub=[]
+    def viewSUB():
+        try:
+            conn = sqlite3.connect('test.db')
+            cursor = conn.cursor()
+            print("Connected to SQLite")
+            sqlite_select_query = """SELECT * from SUBJECTS"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            rows=len(records)
+            print("Printing each row")
+            for row in records:
+                LSub.append(row[0])
+                LSub.append(row[1])
+                L_Sub.append(row[1])
+            cursor.close()  
+        except sqlite3.Error as error:
+            print("Failed to read data from sqlite table", error)
+        finally:
+            if (conn):
+                conn.close()
+                print("The SQLite connection is closed")
+    viewSUB()
+    print(LSub)
+    def update4(FOO):
+        x=clicked3.get()
+        x=str(x)
+        y=LSub.index(x)
+        print(int(LSub[y-1]),x)
+        Subject_cde=int(LSub[y-1])
+        Subject_code[0]=Subject_cde
+    clicked3=StringVar(updo)
+    clicked3.set('Subjects')
+    drop=OptionMenu(updo,clicked3,*tuple(L_Sub),command=update4)
+    drop.configure(width=10,height=1,background='white',foreground='black')
+    drop.pack()
     Label(updo,text='').pack()
-    def updation():
-        tech_id=tid.get()
+    def updation(tech_id):
         Label(updo,text='Enter NEW SUBJECT_NAME').pack()
         tech_name=StringVar()
         tn=Entry(updo,textvariable=tech_name)
         tn.pack()
-        def updateSqliteTable():
-            tech_id=tid.get()
+        def updateSqliteTable(tech_id):
             tech_name=tn.get()
             try:
                 conn = sqlite3.connect('test.db')
@@ -1982,11 +2835,10 @@ def Up_del_subjects(widget):
                     conn.close()
                     print("The sqlite connection is closed")
                 
-        Btn2=Button(updo,text='UPDATE SUBJECT',command=updateSqliteTable).pack()
-    Btn1=Button(updo,text="UPDATE",command=updation).pack()
+        Btn2=Button(updo,text='UPDATE SUBJECT',command=lambda:updateSqliteTable(tech_id)).pack()
+    Btn1=Button(updo,text="UPDATE",command=lambda:updation(Subject_code[0])).pack()
     Label(updo,text='').pack()
-    def deletesubject():
-        tech_id=tid.get()
+    def deletesubject(tech_id):
         try:
             conn = sqlite3.connect('test.db')
             cursor = conn.cursor()
@@ -2005,7 +2857,7 @@ def Up_del_subjects(widget):
             if (conn):
                 conn.close()
                 print("sqlite connection is closed")
-    Btn1=Button(updo,text="DELETE",command=deletesubject).pack()
+    Btn1=Button(updo,text="DELETE",command=lambda:deletesubject(Subject_code[0])).pack()
     Label(updo,text='').pack()
     Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
@@ -2015,18 +2867,51 @@ def Up_del_allots(widget):
     updo=Tk()
     updo.geometry("300x500")
     Label(updo,text='Enter TEACHER_ID to be updated or deleted').pack()
-    tech_id=IntVar()
-    tid=Entry(updo,textvariable=tech_id)
-    tid.pack()
+    tech_id=[0]
+    LTES=[]
+    L_TES=[]
+    def viewTES():
+        try:
+            conn = sqlite3.connect('test.db')
+            cursor = conn.cursor()
+            print("Connected to SQLite")
+            sqlite_select_query = """SELECT * from TEACHERS"""
+            cursor.execute(sqlite_select_query)
+            records = cursor.fetchall()
+            rows=len(records)
+            print("Printing each row")
+            for row in records:
+                LTES.append(row[0])
+                LTES.append(row[1])
+                L_TES.append(row[1])
+            cursor.close()  
+        except sqlite3.Error as error:
+            print("Failed to read data from sqlite table", error)
+        finally:
+            if (conn):
+                conn.close()
+                print("The SQLite connection is closed")
+    viewTES()
+    print(LTES)
+    def update3(FOO):
+        x=clicked2.get()
+        x=str(x)
+        y=LTES.index(x)
+        print(int(LTES[y-1]),x)
+        Teacher_id=int(LTES[y-1])
+        tech_id[0]=Teacher_id
+    clicked2=StringVar(updo)
+    clicked2.set('TEACHERS')
+    drop=OptionMenu(updo,clicked2,*tuple(L_TES),command=update3)
+    drop.configure(width=10,height=1,background='white',foreground='black')
+    drop.pack()
     Label(updo,text='').pack()
-    def updation():
-        tech_id=tid.get()
+    def updation(tech_id):
         Label(updo,text='Enter NEW SUBJECT_CODE').pack()
         tech_name=IntVar()
         tn=Entry(updo,textvariable=tech_name)
         tn.pack()
-        def updateSqliteTable():
-            tech_id=tid.get()
+        def updateSqliteTable(tech_id):
             tech_name=tn.get()
             try:
                 conn = sqlite3.connect('test.db')
@@ -2047,12 +2932,11 @@ def Up_del_allots(widget):
                     conn.close()
                     print("The sqlite connection is closed")
                 
-        Btn2=Button(updo,text='UPDATE ALLOTMENT',command=updateSqliteTable).pack()
-    Btn1=Button(updo,text="UPDATE",command=updation).pack()
+        Btn2=Button(updo,text='UPDATE ALLOTMENT',command=lambda:updateSqliteTable(tech_id)).pack()
+    Btn1=Button(updo,text="UPDATE",command=lambda:updation(tech_id[0])).pack()
     Label(updo,text='').pack()
 
-    def deletion():
-        tech_id=tid.get()
+    def deletion(tech_id):
         Label(updo,text='Enter SUBJECT_CODE').pack()
         tech_name=IntVar()
         tn=Entry(updo,textvariable=tech_name)
@@ -2079,8 +2963,8 @@ def Up_del_allots(widget):
                     conn.close()
                     print("The sqlite connection is closed")
                 
-        Btn2=Button(updo,text='Delete record',command=updateSqliteTable).pack()
-    Btn1=Button(updo,text="DELETE",command=deletion).pack()
+        Btn2=Button(updo,text='Delete record',command=lambda:updateSqliteTable(tech_id)).pack()
+    Btn1=Button(updo,text="DELETE",command=lambda:deletion(tech_id[0])).pack()
     Label(updo,text='').pack()
     Btn1=Button(updo,text="BACK",command=lambda:edit_database(updo)).pack()
 
@@ -2307,13 +3191,13 @@ def rootlogin(widget):
     rootlogi.geometry("800x400")
     Label(rootlogi,text="Join our Community", bg='blue', width='100',height='4',font=("Calibri",16)).pack()
     Label(rootlogi,text="").pack()
-    Button(rootlogi,text='Login',height='2',width='30',command=lambda:login_page(rootlogi)).pack()
+    Button(rootlogi,text='Login',height='2',bg='white',fg='black',width='30',font=("Arial",10,'bold'),command=lambda:login_page(rootlogi)).pack()
     Label(rootlogi,text='').pack()
-    Button(rootlogi,text='Register',height='2',width='30',command=lambda:registration_page(rootlogi)).pack()
+    Button(rootlogi,text='Register',height='2',bg='white',fg='black',width='30',font=("Arial",10,'bold'),command=lambda:registration_page(rootlogi)).pack()
     Label(rootlogi,text='').pack()
-    Button(rootlogi,text='VIEW_TIMETABLE',height='2',width='30',command=lambda:view_timetable(rootlogi)).pack()
+    Button(rootlogi,text='VIEW_TIMETABLE',height='2',bg='white',fg='black',width='30',font=("Arial",10,'bold'),command=lambda:view_timetable(rootlogi)).pack()
     Label(rootlogi,text='').pack()
-    Button(rootlogi,text='VIEW_ATTENDANCE',height='2',width='30',command=lambda:show_atten(rootlogi)).pack()
+    Button(rootlogi,text='VIEW_ATTENDANCE',height='2',bg='white',fg='black',width='30',font=("Arial",10,'bold'),command=lambda:show_atten(rootlogi)).pack()
     Label(rootlogi,text='').pack()
 
 
