@@ -3,12 +3,12 @@ from tkinter import *
 
 #conn=sqlite3.connect('test.db')
 #conn.execute('''CREATE TABLE LOGIN_DETAILS
-#                    (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-#                    NAME        TEXT     NOT NULL,
-#                    EMAILID     VARCHAR  NOT NULL,
-#                    GENDER      TEXT     NOT NULL,
-#                    INSTITUTE   VARCHAR  NOT NULL,
-#                    PASSWORD    VARCHAR NOT NULL);''')
+#                   (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+#                   NAME        TEXT     NOT NULL,
+#                   EMAILID     VARCHAR  NOT NULL,
+#                   GENDER      TEXT     NOT NULL,
+#                   INSTITUTE   VARCHAR  NOT NULL,
+#                   PASSWORD    VARCHAR NOT NULL);''')
 #print('Table created successfully')
 
 #to delete a single row from login table. We can do it with anything if we will be uncomfortable.
@@ -279,7 +279,7 @@ def viewteachers():
 #                CLASS_NAME VARCHAR(128) NOT NULL);''')
 #print('Table created successfully')
 #conn.close()
-
+#
 #conn=sqlite3.connect('test.db')
 #conn.execute('''CREATE TABLE SUBJECTS(SUBJECT_CODE INTEGER(3) PRIMARY KEY,
 #                SUBJECT_NAME VARCHAR(128) NOT NULL);''')
@@ -337,6 +337,10 @@ def joinedtable():
 #                DAY_NAME VARCHAR(20) NOT NULL);''')
 #print('Table created successfully')
 #conn.close()
+conn=sqlite3.connect('test.db')
+conn.execute('''CREATE TABLE Att_Dates(DATES DATE PRIMARY KEY);''')
+print('Table created successfully')
+conn.close()
 
 #conn=sqlite3.connect('test.db')
 #conn.execute('''CREATE TABLE PERIODS(PERIOD_NUMBER INTEGER(2) PRIMARY KEY,
@@ -346,7 +350,7 @@ def joinedtable():
 
 #conn=sqlite3.connect('test.db')
 #conn.execute('''CREATE TABLE TIMETABLE(CLASS_ID INTEGER(4)NOT NULL,
-#                DAY_NUMBER INTEGER(2) NOT NULL,
+#               DAY_NUMBER INTEGER(2) NOT NULL,
 #                PERIOD_NUMBER INTEGER(2) NOT NULL,
 #                TEACHER_ID INTEGER(4) NOT NULL,
 #                SUBJECT_CODE INTEGER(3) NOT NULL,
